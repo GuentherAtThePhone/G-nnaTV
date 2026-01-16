@@ -1,0 +1,183 @@
+# Installation von Whisper per Kommandozeile
+# Überarbeitete Version von GünnaTV vom 16.01.2026
+
+# Bonusmaterial zu c't 2023/14, S. 140
+# Die einzelnen Befehle stehen jeweils in einer Zeile. 
+# Sie erkennen sie daran, dass die Zeilen nicht mit einer Raute (#) beginnen.
+# Für eine korrekte Installation bitte jeweils die komplette Zeile kopieren.
+# Manche Befehle scheinen in bestimmten Texteditoren über mehrere Zeilen zu gehen, 
+# sie werden aber nur am Seitenrand umgebrochen. 
+# Diese markieren Sie in den meisten Texteditoren in Gänze mittels eines Dreifachklicks
+# auf den Text dieser Zeile. Wählen Sie dann "Kopieren" und dann "Einfügen" im 
+# Kommandozeilenprogramm. 
+# Eventuell müssen Sie das Ausführen noch mit der Enter-Taste bestätigen.
+
+# -------
+# Windows
+# -------
+
+# Installation der Paketverwaltung [Chocolatey](https://chocolatey.org/install)
+
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+# Überprüfen, ob Installation gelungen ist
+
+choco -?
+
+# Installation der Pakete ffmpeg, git und python 3.9
+
+choco install ffmpeg git python39
+
+# Damit ist die Vorbereitung unter Windows vollendet.
+
+# -----
+
+# Pakete aktualisieren (alle paar Wochen durchführen)
+
+choco upgrade all -y
+
+# PowerShell Neu Starten (als Administrator)
+# Scripte Erlauben
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+
+# -----
+
+# Chocolatey wieder löschen
+
+# Falls Sie Whisper nicht mehr benötigen und die dazugehörigen Pakete nicht mehr aktualisieren, sollten Sie die dazugehörigen Programmpakete sowie den Paketmanager wieder entfernen.
+
+choco uninstall all
+
+# Dann löschen Sie noch den Ordner C:\ProgramData\chocolatey über den Explorer
+
+# -------
+# Linux
+# -------
+
+# Linux-Distributionen verfügen standardmäßig über einen Paketmanager. Das folgende Beispiel führt die Installation exemplarisch an einer debian-basierten Distribution vor, genauer: Ubuntu 22.04 LTS. Dort ist Python 3.10 vorinstalliert.
+
+# Installation von venv
+
+sudo apt install python3.10-venv
+
+# Hinzufügen des Repository für ältere Python-Versionen
+
+sudo apt add-apt-repository ppa:deadsnakes/ppa
+
+# Installation von python 3.9 und dazugehörigem venv
+
+sudo apt install python3.9
+sudo apt install python3.9-venv
+
+# Installation der Pakete ffmpeg und git
+
+sudo apt install ffmpeg git
+
+# Damit ist die Vorbereitung unter Linux vollendet.
+
+# -----
+
+# Pakete aktualisieren (alle paar Wochen durchführen)
+
+sudo apt update
+sudo apt upgrade
+
+# -----
+
+# Deinstallation
+# Der Paketmanager ist unter Linux integraler Bestandteil des Systems. Wollen Sie Python 3.9, ffmpeg und git wieder löschen und Python nur noch in der vorinstallierten Version verwenden, sind dies die relevanten Kommandozeilenbefehle:
+
+sudo apt remove python3.9 ffmpeg git
+sudo add-apt-repository -r ppa:deadsnakes/ppa
+
+# -------
+# macOS
+# -------
+
+# Installation der Xcode-Kommandozeilenwerkzeuge (inklusive git und python 3.11)
+
+xcode-select --install
+
+# Installation der Paketverwaltung [Homebrew](https://brew.sh)
+
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Überprüfen, ob Homebrew richtig installiert ist
+
+brew --version
+
+# Installation der Pakete ffmpeg, git und python 3.9
+
+brew update
+brew install ffmpeg python@3.9
+
+# Damit ist die Vorbereitung unter macOS vollendet.
+
+# -----
+
+# Pakete aktualisieren (alle paar Wochen durchführen)
+
+brew upgrade
+
+# Deinstallation der Pakete und der Paketverwaltung Homebrew
+
+brew uninstall ffmpeg python@3.9
+/bin/bash/ -c "$(curl -fsSL https://raw.githubuser content.com/Homebrew/install/HEAD/un install.sh)"
+
+# -------
+# Installation von whisper (alle Systeme)
+# -------
+
+# Bitte beachten: Der Artikel beschreibt detailliert die Ordnerstruktur, die der Installation zu Grunde liegt. Die folgenden Befehle setzen voraus, dass Sie dies ebenso angelegt haben, wie wir das im Artikel vorgeschlagen haben.
+
+
+# Vorbereitung der virtuellen Umgebung
+
+# Navigiere in den Skripte-Ordner
+
+python3.9 -m venv whisperenv
+source whisperenv/bin/activate
+# abweichend unter Windows:
+whisperenv\Scripts\activate.ps1
+
+# Whisper-Installation
+
+pip install pip-review
+pip install git+https://github.com/openai/whisper.git
+
+# Funktionstest
+
+whisper --help
+
+# Wenn's nicht funktioniert (unter macOS mehrfach aufgetreten)
+
+sudo ln -s ~/Skripte/whisperenv/bin/whisper /usr/local/opt
+
+# Erster Testlauf
+# Bewegen Sie die Datei "whispertest_ct.mp3" in den Ordner "Skripte" und führen den folgenden Befehl aus:
+
+whisper --model_dir whisperenv/models 'whispertest_ct.mp3'
+
+# Die Kommandozeile zeigt interaktiv den Download des Sprachmodells "small"
+# Dann startet die Texterkennung der Sprachdatei. 
+# Dabei können Sie beobachten, wie lange Ihr Rechner für die 
+# Transkription einer zweiminütigen Aufnahme in etwa benötigt.
+
+# -----
+# Aktualisierung (alle paar Wochen durchführen)
+
+pip-review --interactive
+pip install --upgrade --no-deps --force-reinstall git+https://github.com/openai/whisper.git
+
+# -----
+# Viel Spaß beim Transkribieren!
+# 
+# Immo Junghärtchen
+
+
+
+
+
+
+
+
